@@ -171,7 +171,11 @@ def hitung_harga(kendaraan, seat, lama_sewa, tujuan):
     return harga_kendaraan + harga_lama_sewa + (harga_tujuan * lama_sewa)
 
 def main():
-    print("🌟 Selamat datang di PO Cakrawala Transport 🌟")
+    print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━━━╮")
+    print("┃              SELAMAT DATANG DI PO CAKRAWALA TRANSPORT                    ┃")
+    print("┃  🌟 Siapkan diri Anda untuk perjalanan yang  luar biasa bersama kami!🌟  ┃")
+    print("┃              Pesan sekarang dan nikmati perjalanan Anda!                 ┃")
+    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
     kendaraan_list = pilih_kendaraan()
     tanggal_sewa = masukkan_tanggal()
     lama_sewa = masukkan_lama_sewa()
@@ -219,7 +223,11 @@ def main():
     print("\nRincian Penyewaan:")
     print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
 
-    print("\n🎉 Terima kasih telah menggunakan layanan kami! Kami berharap Anda menikmati perjalanan Anda! 🚍✨")
+    print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━━━╮")
+    print("┃     TERIMA KASIH TELAH MEMILIH CAKRAWALA TRANSPORT!       ┃")
+    print("┃    ✨Kami berharap Anda menikmati perjalanan Anda!✨      ┃")
+    print("┃      ✨Sampai jumpa di perjalanan berikutnya!✨           ┃")
+    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
 
 if __name__ == "__main__":
     main()
