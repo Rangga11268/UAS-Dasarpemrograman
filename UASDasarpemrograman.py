@@ -178,8 +178,32 @@ def hitung_harga(kendaraan, seat, lama_sewa, tujuan):
     harga_tujuan = jarak_tujuan[tujuan] * 1000
     return harga_kendaraan + harga_lama_sewa + (harga_tujuan * lama_sewa)
 
+def input_pembayaran(total_harga):
+    print(f"Total yang harus dibayar: Rp{total_harga:,}")
+    while True:
+        try:
+            nominal_input = input("Masukkan nominal pembayaran: ")
+            # Remove commas from the input for conversion
+            nominal = int(nominal_input.replace(',', ''))
+            if nominal >= total_harga:
+                kembalian = nominal - total_harga
+                print(f"Kembalian: Rp{kembalian:,}")
+                return nominal, kembalian
+            else:
+                print("Nominal yang dimasukkan kurang dari total. Silakan coba lagi.")
+        except ValueError:
+            print("Input tidak valid. Silakan masukkan angka.")
+
+def input_pin():
+    while True:
+        pin = input("Masukkan PIN (4 digit): ")
+        if pin.isdigit() and len(pin) == 4:
+            return pin
+        else:
+            print("PIN tidak valid. Harus 4 digit.")
+
 def main():
-    print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━━━╮")
+    print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╮")
     print("┃              SELAMAT DATANG DI PO CAKRAWALA TRANSPORT                    ┃")
     print("┃  🌟 Siapkan diri Anda untuk perjalanan yang  luar biasa bersama kami!🌟  ┃")
     print("┃              Pesan sekarang dan nikmati perjalanan Anda!                 ┃")
@@ -231,17 +255,33 @@ def main():
         "Total Harga": f"Rp{total_harga_all:,}"
     }
 
+    # Input pembayaran
+    if pembayaran in [2, 3]:  # Kartu Kredit atau Transfer Bank
+        input_pin()
+
+    total_bayar, kembalian = input_pembayaran(total_harga_all)
+
     # Menampilkan nama penyewa
     print("\nNama Penyewa:")
     print(tabulate([[nama_penyewa]], headers=["Nama Penyewa"], tablefmt='fancy_grid', stralign='center'))
+    
     # Menampilkan rincian penyewaan dalam format tabel menggunakan tabulate
-    print("\nRinc ian Penyewaan:")
+    print("\nRincian Penyewaan:")
     print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False, stralign='center', numalign='center'))
+
+    # Menampilkan total bayar dan kembalian dalam tabel terpisah
+    total_data = [
+        ["Total Bayar", f"Rp{total_bayar:,}"],
+        ["Kembalian", f"Rp{kembalian:,}"]
+    ]
+    print("\nRincian Pembayaran:")
+    print(tabulate(total_data, headers=["Deskripsi", "Jumlah"], tablefmt='fancy_grid', stralign='center'))
 
     print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━━━╮")
     print("┃     TERIMA KASIH TELAH MEMILIH CAKRAWALA TRANSPORT!       ┃")
     print("┃    ✨Kami berharap Anda menikmati perjalanan Anda!✨      ┃")
     print("┃      ✨Sampai jumpa di perjalanan berikutnya!✨           ┃")
     print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
+
 if __name__ == "__main__":
     main()
