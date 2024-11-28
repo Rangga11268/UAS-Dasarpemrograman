@@ -73,6 +73,14 @@ def pilih_seat(kendaraan):
         except ValueError:
             print("Input tidak valid. Silakan masukkan angka.")
 
+def masukkan_nama_penyewa():
+    while True:
+        nama = input("Masukkan nama penyewa: ")
+        if nama.strip():  # Check if name is not empty
+            return nama
+        else:
+            print("Nama tidak boleh kosong. Silakan coba lagi.")
+
 def masukkan_tanggal():
     while True:
         tanggal_sewa = input("Masukkan tanggal sewa (YYYY-MM-DD): ")
@@ -106,11 +114,11 @@ def pilih_tempat_penjemputan():
 
     while True:
         try:
-            penjemputan = int (input("Pilih tempat penjemputan (1/2/3/4/5): "))
+            penjemputan = int(input("Pilih tempat penjemputan (1/2/3/4/5): "))
             if 1 <= penjemputan <= 5:
                 detail_penjemputan = input("Masukkan detail penjemputan: ")
                 if detail_penjemputan.strip():  # Check if detail is not empty
-                    return penjemputan, detail_penjemputan
+                    return f"{['Jakarta', 'Bogor', 'Depok', 'Tangerang', 'Bekasi'][penjemputan - 1]} - {detail_penjemputan}"
                 else:
                     print("Detail penjemputan tidak boleh kosong. Silakan coba lagi.")
             else:
@@ -176,30 +184,35 @@ def main():
     print("┃  🌟 Siapkan diri Anda untuk perjalanan yang  luar biasa bersama kami!🌟  ┃")
     print("┃              Pesan sekarang dan nikmati perjalanan Anda!                 ┃")
     print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
+
+    # Meminta informasi penyewa
+    nama_penyewa = masukkan_nama_penyewa()
     kendaraan_list = pilih_kendaraan()
     tanggal_sewa = masukkan_tanggal()
     lama_sewa = masukkan_lama_sewa()
-    penjemputan, detail_penjemputan = pilih_tempat_penjemputan()
+    penjemputan = pilih_tempat_penjemputan()
     tujuan, detail_tujuan = pilih_tujuan_wisata()
     pembayaran = metode_pembayaran()
 
     total_harga_all = 0  # Variabel untuk menyimpan total keseluruhan
     data = []
 
+    # Menghitung total harga dan menyusun data
     for kendaraan, seat in kendaraan_list:
         total_harga = hitung_harga(kendaraan, seat, lama_sewa, tujuan)
-        total_harga_all += total_harga  # Menambahkan total harga ke total keseluruhan
+        total_harga_all += total_harga
+        
+        # Menambahkan rincian kendaraan
         data.append({
             "Tanggal Sewa": tanggal_sewa,
             "Jenis Kendaraan": ["Mobil Elf", "Bus Medium", "Bus Besar"][kendaraan - 1],
             "Kapasitas Kursi": ["10 seat", "19 seat", "27 seat", "35 seat", "50 seat", "59 seat"][seat + (kendaraan - 1) * 2 - 1],
             "Lama Sewa": f"{lama_sewa} hari",
-            "Tempat Penjemputan": ["Jakarta", "Bogor", "Depok", "Tangerang", "Bekasi"][penjemputan - 1],
-            "Detail Penjemputan": detail_penjemputan,
+            "Tempat Penjemputan": penjemputan,
             "Tujuan Wisata": ["Banten", "DKI Jakarta", "Jawa Barat", "Jawa Tengah", "Jawa Timur", "DI Jogjakarta", "Bali"][tujuan - 1],
             "Detail Tujuan": detail_tujuan,
             "Metode Pembayaran": ["Tunai", "Kartu Kredit", "Transfer Bank"][pembayaran - 1],
-            "Total Harga": f"Rp{total_harga:,}"  # Format harga dengan ribuan pemisah
+            "Total Harga": f"Rp{total_harga:,}"
         })
 
     # Mengonversi data menjadi DataFrame
@@ -208,26 +221,27 @@ def main():
     # Menambahkan total keseluruhan ke DataFrame
     df.loc[len(df)] = {
         "Tanggal Sewa": "",
-        "Jenis Kendaraan": "Total Keseluruhan",
+        "Jenis Kendaraan": "",
         "Kapasitas Kursi": "",
         "Lama Sewa": "",
         "Tempat Penjemputan": "",
-        "Detail Penjemputan": "",
         "Tujuan Wisata": "",
         "Detail Tujuan": "",
         "Metode Pembayaran": "",
         "Total Harga": f"Rp{total_harga_all:,}"
     }
 
+    # Menampilkan nama penyewa
+    print("\nNama Penyewa:")
+    print(tabulate([[nama_penyewa]], headers=["Nama Penyewa"], tablefmt='fancy_grid', stralign='center'))
     # Menampilkan rincian penyewaan dalam format tabel menggunakan tabulate
-    print("\nRincian Penyewaan:")
-    print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False))
+    print("\nRinc ian Penyewaan:")
+    print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False, stralign='center', numalign='center'))
 
     print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━━━╮")
     print("┃     TERIMA KASIH TELAH MEMILIH CAKRAWALA TRANSPORT!       ┃")
     print("┃    ✨Kami berharap Anda menikmati perjalanan Anda!✨      ┃")
     print("┃      ✨Sampai jumpa di perjalanan berikutnya!✨           ┃")
     print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
-
 if __name__ == "__main__":
     main()
