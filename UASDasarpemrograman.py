@@ -3,15 +3,7 @@ import pandas as pd
 from tabulate import tabulate  # Import tabulate
 
 # Jarak tujuan wisata dalam kilometer
-jarak_tujuan = {
-    1: 100,   # Banten
-    2: 10,    # DKI Jakarta
-    3: 50,    # Jawa Barat
-    4: 200,   # Jawa Tengah
-    5: 300,   # Jawa Timur
-    6: 600,   # DI Jogjakarta
-    7: 1200   # Bali
-}
+jarak_tujuan = {1: 100, 2: 10, 3: 50, 4: 200, 5: 300, 6: 600, 7: 1200}
 
 # Harga sewa kendaraan per hari
 harga_sewa = {
@@ -19,7 +11,6 @@ harga_sewa = {
     2: {1: 1700000, 2: 2100000},  # Bus Medium
     3: {1: 3600000, 2: 4000000}   # Bus Besar
 }
-
 def tampilkan_menu():
     menu_data = [
         ["1", "Mobil Elf (10 dan 19 seat)"],
@@ -38,20 +29,25 @@ def pilih_kendaraan():
             try:
                 jumlah_unit = int(input("Masukkan jumlah unit yang ingin disewa: "))
                 if jumlah_unit > 0:
-                    for _ in range(jumlah_unit):
-                        seat = pilih_seat(int(kendaraan))
+                    seat_data = tampilkan_tabel_seat(int(kendaraan))  # Tampilkan tabel kursi
+                    for i in range(jumlah_unit):
+                        print(f"\nUnit {i + 1} dari {jumlah_unit}:")
+                        seat = pilih_kursi_dari_tabel(seat_data)  # Ambil input pilihan
                         kendaraan_list.append((int(kendaraan), seat))
                 else:
                     print("Jumlah unit harus lebih dari 0. Silakan coba lagi.")
             except ValueError:
                 print("Input tidak valid. Silakan masukkan angka.")
         elif kendaraan == '0':
-            break
+            if not kendaraan_list:  # Cek jika belum ada kendaraan yang dipilih
+                print("Anda belum memilih kendaraan. Silakan pilih kendaraan terlebih dahulu.")
+            else:
+                break  # Jika sudah memilih kendaraan, keluar dari loop
         else:
             print("Pilihan tidak valid. Silakan coba lagi.")
     return kendaraan_list
 
-def pilih_seat(kendaraan):
+def tampilkan_tabel_seat(kendaraan):
     seat_data = []
     if kendaraan == 1:
         seat_data = [["1", "Mobil Elf 10 seat"], ["2", "Mobil Elf 19 seat"]]
@@ -62,12 +58,14 @@ def pilih_seat(kendaraan):
 
     print("Pilih kapasitas kursi:")
     print(tabulate(seat_data, headers=["No", "Kapasitas Kursi"], tablefmt="fancy_grid"))
+    return seat_data
 
+def pilih_kursi_dari_tabel(seat_data):
     while True:
         try:
-            seat = int(input("Pilih kapasitas kursi (1/2): "))
-            if seat in [1, 2]:
-                return seat
+            pilihan = int(input("Pilih kapasitas kursi (1/2): "))
+            if pilihan in [1, 2]:
+                return pilihan
             else:
                 print("Pilihan tidak valid. Silakan coba lagi.")
         except ValueError:
