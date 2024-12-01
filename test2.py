@@ -2,9 +2,6 @@ import datetime
 import pandas as pd
 from tabulate import tabulate
 
-# Jarak tujuan wisata dalam kilometer
-jarak_tujuan = {1: 100, 2: 10, 3: 50, 4: 200, 5: 300, 6: 600, 7: 1200}
-
 # Harga sewa kendaraan per hari
 harga_sewa = {
     1: {1: 900000, 2: 1100000},  # Mobil Elf
@@ -12,112 +9,42 @@ harga_sewa = {
     3: {1: 3600000, 2: 4000000}   # Bus Besar
 }
 
-def tampilkan_menu(data, headers):
-    print(tabulate(data, headers=headers, tablefmt="fancy_grid"))
-
-def input_with_validation(prompt, valid_options, error_message):
-    while True:
-        try:
-            choice = int(input(prompt))
-            if choice in valid_options:
-                return choice
-            else:
-                print(error_message)
-        except ValueError:
-            print("Input tidak valid. Silakan masukkan angka.")
-
-def masukkan_nama_penyewa():
-    while True:
-        nama = input("Masukkan nama penyewa: ")
-        if nama.strip():
-            return nama
-        print("Nama tidak boleh kosong. Silakan coba lagi.")
-
-def masukkan_tanggal():
-    while True:
-        tanggal_sewa = input("Masukkan tanggal sewa (YYYY-MM-DD): ")
-        try:
-            datetime.datetime.strptime(tanggal_sewa, '%Y-%m-%d')
-            return tanggal_sewa
-        except ValueError:
-            print("Format tanggal tidak valid. Silakan coba lagi.")
-
-def masukkan_lama_sewa():
-    return input_with_validation("Masukkan berapa hari sewa: ", range(1, 100), "Lama sewa harus lebih dari 0.")
-
-def pilih_tempat_penjemputan():
-    penjemputan_data = [
-        ["1", "Jakarta"],
-        ["2", "Bogor"],
-        ["3", "Depok"],
-        ["4", "Tangerang"],
-        ["5", "Bekasi"]
+def tampilkan_menu():
+    menu_data = [
+        ["1", "Mobil Elf (10 dan 19 seat)"],
+        ["2", "Bus Medium (27 dan 35 seat)"],
+        ["3", "Bus Besar (50 dan 59 seat)"]
     ]
-    tampilkan_menu(penjemputan_data, ["No", "Tempat Penjemputan"])
-    choice = input_with_validation("Pilih tempat penjemputan (1/2/3/4/5): ", range(1, 6), "Pilihan tidak valid.")
-    detail_penjemputan = input("Masukkan detail penjemputan: ")
-    return f"{['Jakarta', 'Bogor', 'Depok', 'Tangerang', 'Bekasi'][choice - 1]} - {detail_penjemputan}"
-
-def pilih_tujuan_wisata():
-    tujuan_data = [[str(i), t] for i, t in enumerate(["Banten", "DKI Jakarta", "Jawa Barat", "Jawa Tengah", "Jawa Timur", "DI Jogjakarta", "Bali"], start=1)]
-    tampilkan_menu(tujuan_data, ["No", "Tujuan Wisata"])
-    choice = input_with_validation("Pilih tujuan wisata (1-7): ", range(1, 8), "Pilihan tidak valid.")
-    detail_tujuan = input("Masukkan detail tempat wisata: ")
-    return choice, detail_tujuan
-
-def metode_pembayaran():
-    pembayaran_data = [["1", "Tunai"], ["2", "Kartu Kredit"], ["3", "Transfer Bank"]]
-    tampilkan_menu(pembayaran_data, ["No", "Metode Pembayaran"])
-    return input_with_validation("Pilih metode pembayaran (1-3): ", range(1, 4), "Pilihan tidak valid.")
-
-def hitung_harga(kendaraan, seat, lama_sewa, tujuan):
-    harga_kendaraan = harga_sewa[kendaraan][seat]
-    harga_lama_sewa = lama_sewa * 50000
-    harga_tujuan = jarak_tujuan[tujuan] * 1000
-    return harga_kendaraan + harga_lama_sewa + (harga_tujuan * lama_sewa)
-
-def input_pembayaran(total_harga):
-    while True:
-        try:
-            nominal = int(input(f"Masukkan nominal pembayaran (Total: Rp{total_harga:,}): ").replace(',', ''))
-            if nominal >= total_harga:
-                return nominal, nominal - total_harga
-            print("Nominal yang dimasukkan kurang dari total. Silakan coba lagi.")
-        except ValueError:
-            print("Input tidak valid. Silakan masukkan angka.")
-
-def input_pin():
-    while True:
-        pin = input("Masukkan PIN (4 digit): ")
-        if pin.isdigit() and len(pin) == 4:
-            return pin
-        print("PIN tidak valid. Harus 4 digit.")
+    print("Menu Penyewaan:")
+    print(tabulate(menu_data, headers=["No", "Jenis Kendaraan"], tablefmt="fancy_grid"))
 
 def pilih_kendaraan():
     kendaraan_list = []
     while True:
-        tampilkan_menu([
-            ["1", "Mobil Elf (10 dan 19 seat)"],
-            ["2", "Bus Medium (27 dan 35 seat)"],
-            ["3", "Bus Besar (50 dan 59 seat)"]
-        ], ["No", "Jenis Kendaraan"])
-
-        kendaraan = input_with_validation("Pilih jenis kendaraan (1/2/3) atau 0 untuk selesai: ", range(0, 4), "Pilihan tidak valid.")
-        if kendaraan == 0:
-            break
-        try:
-            jumlah_unit = int(input("Masukkan jumlah unit yang ingin disewa: "))
-            if jumlah_unit > 0:
-                seat = tampilkan_tabel_seat(int(kendaraan))  # Tampilkan tabel hanya 1 kali
-                for i in range(jumlah_unit):  # Iterasi sesuai jumlah unit
-                    print(f"\nUnit {i + 1} dari {jumlah_unit}:")
-                    pilihan = pilih_kursi_dari_tabel(seat)  # Ambil input pilihan
-                    kendaraan_list.append((int(kendaraan), pilihan))
+        tampilkan_menu()
+        kendaraan = input("Pilih jenis kendaraan (1/2/3) atau 0 untuk selesai: ")
+        if kendaraan in ['1', '2', '3']:
+            try:
+                jumlah_unit = int(input("Masukkan jumlah unit yang ingin disewa: "))
+                if jumlah_unit > 0:
+                    seat_data = tampilkan_tabel_seat(int(kendaraan))
+                    for i in range(jumlah_unit):
+                        print(f"\nUnit {i + 1} dari {jumlah_unit}:")
+                        seat = pilih_kursi_dari_tabel(seat_data)
+                        kendaraan_list.append((int(kendaraan), seat))
+                else:
+                    print("Jumlah unit harus lebih dari 0. Silakan coba lagi.")
+            except ValueError:
+                print("Input tidak valid. Silakan masukkan angka.")
+        elif kendaraan == '0':
+            if not kendaraan_list:
+                print("Anda belum memilih kendaraan. Silakan pilih kendaraan terlebih dahulu.")
             else:
-                print("Jumlah unit harus lebih dari 0. Silakan coba lagi.")
-        except ValueError:
-            print("Input tidak valid. Silakan masukkan angka.")
+                break
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.")
     return kendaraan_list
+
 def tampilkan_tabel_seat(kendaraan):
     seat_data = []
     if kendaraan == 1:
@@ -127,8 +54,10 @@ def tampilkan_tabel_seat(kendaraan):
     else:
         seat_data = [["1", "Bus Besar 50 seat"], ["2", "Bus Besar 59 seat"]]
 
+    print("Pilih kapasitas kursi:")
     print(tabulate(seat_data, headers=["No", "Kapasitas Kursi"], tablefmt="fancy_grid"))
     return seat_data
+
 def pilih_kursi_dari_tabel(seat_data):
     while True:
         try:
@@ -140,55 +69,173 @@ def pilih_kursi_dari_tabel(seat_data):
         except ValueError:
             print("Input tidak valid. Silakan masukkan angka.")
 
+def masukkan_nama_penyewa():
+    while True:
+        nama = input("Masukkan nama penyewa: ")
+        if nama.strip():
+            return nama
+        else:
+            print("Nama tidak boleh kosong. Silakan coba lagi.")
+
+def masukkan_tanggal():
+    while True:
+        tanggal_sewa = input("Masukkan tanggal sewa (YYYY-MM-DD): ")
+        try:
+            datetime.datetime.strptime(tanggal_sewa, '%Y-%m-%d')
+            return tanggal_sewa
+        except ValueError:
+            print("Format tanggal tidak valid. Silakan coba lagi.")
+
+def masukkan_lama_sewa():
+    while True:
+        try:
+            lama_sewa = int(input("Masukkan berapa hari sewa: "))
+            if lama_sewa > 0:
+                return lama_sewa
+            else:
+                print("Lama sewa harus lebih dari 0. Silakan coba lagi.")
+        except ValueError:
+            print("Input tidak valid. Silakan masukkan angka.")
+
+def pilih_tempat_penjemputan():
+    while True:
+        detail_penjemputan = input("Masukkan tempat penjemputan (contoh: Jakarta - SMPN 1 JAKARTA): ")
+        if detail_penjemputan.strip():
+            return detail_penjemputan
+        else:
+            print("Detail penjemputan tidak boleh kosong. Silakan coba lagi.")
+
+def pilih_tujuan_wisata():
+    while True:
+        detail_tujuan = input("Masukkan tujuan wisata (contoh: Banten, DKI Jakarta, Bali - Dewata): ")
+        if detail_tujuan.strip():
+            while True:
+                try:
+                    jarak = int(input("Masukkan jarak tujuan wisata dalam kilometer: "))
+                    return detail_tujuan, jarak
+                except ValueError:
+                    print("Input tidak valid. Silakan masukkan angka untuk jarak.")
+        else:
+            print("Detail tujuan tidak boleh kosong. Silakan coba lagi.")
+
+def metode_pembayaran():
+    pembayaran_data = [
+        ["1", "Tunai"],
+        ["2", "Kartu Kredit"],
+        ["3", "Transfer Bank"]
+    ]
+    print("Pilih metode pembayaran:")
+    print(tabulate(pembayaran_data, headers=["No", "Metode Pembayaran"], tablefmt="fancy_grid"))
+
+    while True:
+        try:
+            pembayaran = int(input("Pilih metode pembayaran (1/2/3): "))
+            if 1 <= pembayaran <= 3:
+                return pembayaran
+            else:
+                print("Pilihan tidak valid. Silakan coba lagi.")
+        except ValueError:
+            print("Input tidak valid. Silakan masukkan angka.")
+
+def hitung_harga(kendaraan, seat, lama_sewa, jarak):
+    harga_kendaraan = harga_sewa[kendaraan][seat]
+    harga_lama_sewa = lama_sewa * 50000
+    harga_tujuan = jarak * 1000
+    return harga_kendaraan + harga_lama_sewa + (harga_tujuan * lama_sewa)
+
+def input_pembayaran(total_harga):
+    print(f"Total yang harus dibayar: Rp{total_harga:,}")
+    while True:
+        try:
+            nominal_input = input("Masukkan nominal pembayaran: ")
+            nominal = int(nominal_input.replace(',', ''))
+            if nominal >= total_harga:
+                kembalian = nominal - total_harga
+                print(f"Kembalian: Rp{kembalian:,}")
+                return nominal, kembalian
+            else:
+                print("Nominal yang dimasukkan kurang dari total. Silakan coba lagi.")
+        except ValueError:
+            print("Input tidak valid. Silakan masukkan angka.")
+
+def input_pin():
+    while True:
+        pin = input("Masukkan PIN (4 digit): ")
+        if pin.isdigit() and len(pin) == 4:
+            return pin
+        else:
+            print("PIN tidak valid. Harus 4 digit.")
+
 def main():
-    print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╮")
+    print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╮")
     print("┃              SELAMAT DATANG DI PO CAKRAWALA TRANSPORT                    ┃")
-    print("┃  🌟 Siapkan diri Anda untuk perjalanan yang  luar biasa bersama kami!🌟  ┃")
+    print("┃  🌟 Siapkan diri Anda untuk perjalanan yang luar biasa bersama kami! 🌟  ┃")
     print("┃              Pesan sekarang dan nikmati perjalanan Anda!                 ┃")
-    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
-    
+    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
+
+    # Meminta informasi penyewa
     nama_penyewa = masukkan_nama_penyewa()
-    kendaraan_list = pilih_kendaraan()  # Pilih kendaraan melalui fungsi yang telah dimodifikasi
-    
+    kendaraan_list = pilih_kendaraan()
     tanggal_sewa = masukkan_tanggal()
     lama_sewa = masukkan_lama_sewa()
     penjemputan = pilih_tempat_penjemputan()
-    tujuan, detail_tujuan = pilih_tujuan_wisata()
+    tujuan, jarak = pilih_tujuan_wisata()
     pembayaran = metode_pembayaran()
 
     total_harga_all = 0
     data = []
 
+    # Menghitung total harga dan menyusun data
     for kendaraan, seat in kendaraan_list:
-        total_harga = hitung_harga(kendaraan, seat, lama_sewa, tujuan)
+        total_harga = hitung_harga(kendaraan, seat, lama_sewa, jarak)
         total_harga_all += total_harga
+        
+        # Menambahkan rincian kendaraan
         data.append({
             "Tanggal Sewa": tanggal_sewa,
             "Jenis Kendaraan": ["Mobil Elf", "Bus Medium", "Bus Besar"][kendaraan - 1],
             "Kapasitas Kursi": ["10 seat", "19 seat", "27 seat", "35 seat", "50 seat", "59 seat"][seat + (kendaraan - 1) * 2 - 1],
             "Lama Sewa": f"{lama_sewa} hari",
             "Tempat Penjemputan": penjemputan,
-            "Tujuan Wisata": ["Banten", "DKI Jakarta", "Jawa Barat", "Jawa Tengah", "Jawa Timur", "DI Jogjakarta", "Bali"][tujuan - 1],
-            "Detail Tujuan": detail_tujuan,
+            "Tujuan Wisata": tujuan,
             "Metode Pembayaran": ["Tunai", "Kartu Kredit", "Transfer Bank"][pembayaran - 1],
             "Total Harga": f"Rp{total_harga:,}"
         })
 
+    # Mengonversi data menjadi DataFrame
     df = pd.DataFrame(data)
-    df.loc[len(df)] = {key: "" for key in df.columns[:-1]}
-    df.at[len(df) - 1, "Total Harga"] = f"Rp{total_harga_all:,}"
 
-    if pembayaran in [2, 3]:
+    # Menambahkan total keseluruhan ke DataFrame
+    df.loc[len(df)] = {
+        "Tanggal Sewa": "",
+        "Jenis Kendaraan": "",
+        "Kapasitas Kursi": "",
+        "Lama Sewa": "",
+        "Tempat Penjemputan": "",
+        "Tujuan Wisata": "",
+        "Metode Pembayaran": "",
+        "Total Harga": f"Rp{total_harga_all:,}"
+    }
+
+    # Input pembayaran
+    if pembayaran in [2, 3]:  # Kartu Kredit atau Transfer Bank
         input_pin()
 
     total_bayar, kembalian = input_pembayaran(total_harga_all)
 
+    # Menampilkan nama penyewa
     print("\nNama Penyewa:")
     print(tabulate([[nama_penyewa]], headers=["Nama Penyewa"], tablefmt='fancy_grid', stralign='center'))
+    
+    # Menampilkan rincian penyewaan dalam format tabel menggunakan tabulate
     print("\nRincian Penyewaan:")
     print(tabulate(df, headers='keys', tablefmt='fancy_grid', showindex=False, stralign='center', numalign='center'))
 
-    total_data = [["Total Bayar", f"Rp{total_bayar:,}"], ["Kembalian", f"Rp{kembalian:,}"]]
+    # Menampilkan total bayar dan kembalian dalam tabel terpisah
+    total_data = [
+        ["Total Bayar", f"Rp{total_bayar:,}"],
+        ["Kembalian", f"Rp{kembalian:,}"]
+    ]
     print("\nRincian Pembayaran:")
     print(tabulate(total_data, headers=["Deskripsi", "Jumlah"], tablefmt='fancy_grid', stralign='center'))
 
@@ -196,7 +243,7 @@ def main():
     print("┃     TERIMA KASIH TELAH MEMILIH CAKRAWALA TRANSPORT!       ┃")
     print("┃    ✨Kami berharap Anda menikmati perjalanan Anda!✨      ┃")
     print("┃      ✨Sampai jumpa di perjalanan berikutnya!✨           ┃")
-    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
+    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╰━━━╯")
 
 if __name__ == "__main__":
     main()
