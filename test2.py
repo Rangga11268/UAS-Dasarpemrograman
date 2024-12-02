@@ -99,7 +99,7 @@ def masukkan_lama_sewa():
 
 def pilih_tempat_penjemputan():
     while True:
-        detail_penjemputan = input("Masukkan tempat penjemputan (contoh: Jakarta - SMPN 1 JAKARTA): ")
+        detail_penjemputan = input("Masukkan tempat penjemputan (contoh: Jakarta - SMAN 1 Jakarta): ")
         if detail_penjemputan.strip():
             return detail_penjemputan
         else:
@@ -107,7 +107,7 @@ def pilih_tempat_penjemputan():
 
 def pilih_tujuan_wisata():
     while True:
-        detail_tujuan = input("Masukkan tujuan wisata (contoh: Banten, DKI Jakarta, Bali - Dewata): ")
+        detail_tujuan = input("Masukkan tujuan wisata (contoh: Banten - Anyer): ")
         if detail_tujuan.strip():
             while True:
                 try:
@@ -168,9 +168,9 @@ def input_pin():
 
 def main():
     print("╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╮")
-    print("┃              SELAMAT DATANG DI PO CAKRAWALA TRANSPORT                    ┃")
-    print("┃  🌟 Siapkan diri Anda untuk perjalanan yang luar biasa bersama kami! 🌟  ┃")
-    print("┃              Pesan sekarang dan nikmati perjalanan Anda!                 ┃")
+    print("┃              SELAMAT DATANG DI PO CAKRAWALA TRANSPORT                   ┃")
+    print("┃  🌟 Siapkan diri Anda untuk perjalanan yang luar biasa bersama kami! 🌟 ┃")
+    print("┃              Pesan sekarang dan nikmati perjalanan Anda!                ┃")
     print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱━━━╯")
 
     # Meminta informasi penyewa
@@ -243,7 +243,7 @@ def main():
     print("┃     TERIMA KASIH TELAH MEMILIH CAKRAWALA TRANSPORT!       ┃")
     print("┃    ✨Kami berharap Anda menikmati perjalanan Anda!✨      ┃")
     print("┃      ✨Sampai jumpa di perjalanan berikutnya!✨           ┃")
-    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╰━━━╯")
+    print("╰━━━╯╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╰━━━╯")
 
 if __name__ == "__main__":
     main()
