@@ -89,31 +89,27 @@ def masukkan_pin():
 
 def metode_pembayaran():
     pembayaran_data = [
-        ["1", "Tunai"],
-        ["2", "E-wallet"],
-        ["3", "Transfer Bank"],
+        ["1", "E-wallet"],
+        ["2", "Transfer Bank"],
     ]
     print("Pilih metode pembayaran:")
     print(tabulate(pembayaran_data, headers=["No", "Metode Pembayaran"], tablefmt="fancy_grid"))
 
     while True:
         try:
-            pembayaran = int(input("Pilih metode pembayaran (1-3): "))
-            if 1 <= pembayaran <= 3:
+            pembayaran = int(input("Pilih metode pembayaran (1-2): "))
+            if 1 <= pembayaran <= 2:
                 if pembayaran == 1:
-                    print("Anda memilih pembayaran Tunai.")
-                    return "Tunai"
-                elif pembayaran == 2:
                     print("Anda memilih pembayaran E-wallet.")
-                    masukkan_pin()
-                    nomor_telepon = input("Masukkan nomor telepon/rekening tujuan: ")
-                    print(f"Nomor telepon/rekening yang dimasukkan: {nomor_telepon}")
+                    nomor_telepon = input("Masukkan nomor rekening/telepon tujuan: ")
+                    print(f"Nomor telepon yang dimasukkan: {nomor_telepon}")
+                    masukkan_pin()  # Minta PIN setelah nomor telepon
                     return "E-wallet"
-                elif pembayaran == 3:
+                elif pembayaran == 2:
                     print("Anda memilih Transfer Bank.")
-                    masukkan_pin()
                     nomor_rekening = input("Masukkan nomor rekening tujuan: ")
                     print(f"Nomor rekening tujuan: {nomor_rekening}")
+                    masukkan_pin()  # Minta PIN setelah nomor rekening
                     return "Transfer Bank"
             else:
                 print("Pilihan tidak valid. Silakan coba lagi.")
