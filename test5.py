@@ -62,11 +62,9 @@ def pilih_kursi(jumlah_tiket, kd_seat):
                 kursi_tampilan.append(f"[🔴] {kursi}")  # Kursi yang sudah dipilih
             else:
                 kursi_tampilan.append(f"[🟢] {kursi}")  # Kursi yang tersedia
-
         kursi_data = [kursi_tampilan[i:i + 5] for i in range(0, len(kursi_tampilan), 5)]
         headers = ["Kursi " + str(i+1) for i in range(5)]  # Headers for each column
         print(tabulate(kursi_data, headers=headers, tablefmt="fancy_grid"))
-
         try:
             kursi = int(input(f"Pilih kursi untuk tiket {len(kursi_dipilih) + 1} (1-{kd_seat}): "))
             if kursi in kursi_tersedia:
@@ -76,7 +74,6 @@ def pilih_kursi(jumlah_tiket, kd_seat):
                 print("Kursi tidak tersedia. Silakan pilih kursi lain.")
         except ValueError:
             print("Input tidak valid. Silakan masukkan angka.")
-
     return tuple(kursi_dipilih)  # Mengembalikan kursi yang dipilih sebagai tuple
 
 def masukkan_pin():
@@ -100,17 +97,57 @@ def metode_pembayaran():
             pembayaran = int(input("Pilih metode pembayaran (1-2): "))
             if 1 <= pembayaran <= 2:
                 if pembayaran == 1:
-                    print("Anda memilih pembayaran E-wallet.")
-                    nomor_telepon = input("Masukkan nomor rekening/telepon tujuan: ")
-                    print(f"Nomor telepon yang dimasukkan: {nomor_telepon}")
-                    masukkan_pin()  # Minta PIN setelah nomor telepon
-                    return "E-wallet"
+                    ewallet_data = [
+                        ["1", "GoPay"],
+                        ["2", "OVO"],
+                        ["3", "DANA"]
+                    ]
+                    print("Pilih E-wallet yang ingin digunakan:")
+                    print(tabulate(ewallet_data, headers=["No", "E-wallet"], tablefmt="fancy_grid"))
+                    while True:
+                        try:
+                            ewallet_choice = int(input("Pilih E-wallet (1-3): "))
+                            if 1 <= ewallet_choice <= 3:
+                                if ewallet_choice == 1:
+                                    print("Anda memilih pembayaran dengan GoPay.")
+                                elif ewallet_choice == 2:
+                                    print("Anda memilih pembayaran dengan OVO.")
+                                elif ewallet_choice == 3:
+                                    print("Anda memilih pembayaran dengan DANA.")
+                                nomor_telepon = input("Masukkan nomor telepon tujuan: ")
+                                print(f"Nomor telepon yang dimasukkan: {nomor_telepon}")
+                                masukkan_pin()  # Minta PIN setelah nomor telepon
+                                return "E-wallet"
+                            else:
+                                print("Pilihan tidak valid. Silakan coba lagi.")
+                        except ValueError:
+                            print("Input tidak valid. Silakan masukkan angka.")
                 elif pembayaran == 2:
-                    print("Anda memilih Transfer Bank.")
-                    nomor_rekening = input("Masukkan nomor rekening tujuan: ")
-                    print(f"Nomor rekening tujuan: {nomor_rekening}")
-                    masukkan_pin()  # Minta PIN setelah nomor rekening
-                    return "Transfer Bank"
+                    bank_data = [
+                        ["1", "BCA"],
+                        ["2", "BRI"],
+                        ["3", "BNI"]
+                    ]
+                    print("Pilih bank yang ingin digunakan:")
+                    print(tabulate(bank_data, headers=["No", "Bank"], tablefmt="fancy_grid"))
+                    while True:
+                        try:
+                            bank_choice = int(input("Pilih Bank (1-3): "))
+                            if 1 <= bank_choice <= 3:
+                                if bank_choice == 1:
+                                    print("Anda memilih pembayaran dengan BCA.")
+                                elif bank_choice == 2:
+                                    print("Anda memilih pembayaran dengan BRI.")
+                                elif bank_choice == 3:
+                                    print("Anda memilih pembayaran dengan BNI.")
+                                nomor_rekening = input("Masukkan nomor rekening tujuan: ")
+                                print(f"Nomor rekening tujuan: {nomor_rekening}")
+                                masukkan_pin()  # Minta PIN setelah nomor rekening
+                                return "Transfer Bank"
+                            else:
+                                print("Pilihan tidak valid. Silakan coba lagi.")
+                        except ValueError:
+                            print("Input tidak valid. Silakan masukkan angka.")
             else:
                 print("Pilihan tidak valid. Silakan coba lagi.")
         except ValueError:
@@ -173,7 +210,7 @@ def main():
         tampilkan_struk(nama_penyewa, tanggal_perjalanan, jumlah_tiket, kursi_dipilih, total_harga, kembalian, metode)
 
         # Menanyakan apakah pengguna ingin membeli tiket lagi
-        lagi = input("Apakah Anda ingin membeli tiket lagi? (ya/tidak): ").strip().lower()
+        lagi = input("Apakah Anda ingin membeli tiket lagi? (ya/tidak): ")
         if lagi != 'ya':
             print("Terima kasih telah menggunakan layanan kami! 🌟 Selamat bepergian! 🌟")
             break
