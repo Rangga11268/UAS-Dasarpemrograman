@@ -93,7 +93,6 @@ def metode_pembayaran():
     ]
     print("Pilih metode pembayaran:")
     print(tabulate(pembayaran_data, headers=["No", "Metode Pembayaran"], tablefmt="fancy_grid"))
-
     while True:
         try:
             pembayaran = int(input("Pilih metode pembayaran (1-2): "))
@@ -160,10 +159,11 @@ def input_pembayaran(total_harga):
         except ValueError:
             print("Input tidak valid. Silakan masukkan angka.")
 
-def tampilkan_struk(nama, tanggal, jumlah_tiket, kursi, total_harga, kembalian, metode, nomor):
+def tampilkan_struk(nama, tanggal, jumlah_tiket, kursi, total_harga, kembalian, metode, nomor, tujuan):
     struk_data = [
         ["Nama Penyewa", nama],
         ["Tanggal Perjalanan", tanggal],
+        ["Tujuan", tujuan],  # Menambahkan tujuan ke struk
         ["Jumlah Tiket", jumlah_tiket],
         ["Kursi yang Dipilih", ', '.join(map(str, kursi))],
         ["Total Harga", format_harga(total_harga)],
@@ -200,7 +200,11 @@ def main():
         metode, nomor_tujuan = metode_pembayaran()
         nominal, kembalian = input_pembayaran(total_harga)
 
-        tampilkan_struk(nama_penyewa, tanggal_perjalanan, jumlah_tiket, kursi_dipilih, total_harga, kembalian, metode, nomor_tujuan)
+        # Ambil tujuan dari unit shuttle yang dipilih
+        tujuan = unit_shuttle[pilihan_unit]["tujuan"]
+
+        # Panggil fungsi tampilkan_struk dengan tujuan
+        tampilkan_struk(nama_penyewa, tanggal_perjalanan, jumlah_tiket, kursi_dipilih, total_harga, kembalian, metode, nomor_tujuan, tujuan)
 
         lagi = input("Apakah Anda ingin membeli tiket lagi? (ya/tidak): ")
         if lagi.lower() != 'ya':
