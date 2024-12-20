@@ -24,7 +24,6 @@ def tampilkan_unit_shuttle():
     menu_data = [[key, value["nama"], value["tujuan"], format_harga(value['harga'])] for key, value in unit_shuttle.items()]
     print(tabulate(menu_data, headers=["No", "Nama", "Tujuan", "Harga"], tablefmt="fancy_grid"))
 
-
 def masukkan_nama():
     while True:
         nama = input("Masukkan nama: ")
@@ -53,7 +52,21 @@ def masukkan_jumlah_tiket(kd_seat):
         except ValueError:
             print("Input tidak valid. Silakan masukkan angka.")
 
-def pilih_kursi(jumlah_tiket, kd_seat, tanggal, tujuan):
+def tampilkan_kursi(kursi_dipilih, kursi_tersedia, kd_seat):
+    kursi_tampilan = []
+    for kursi in range(1, kd_seat + 1):
+        if kursi in kursi_dipilih:
+            kursi_tampilan.append(f"[\U0001F534] {kursi}")  # Selected seat (green circle)
+        elif kursi not in kursi_tersedia:
+            kursi_tampilan.append(f"[\U0001F535] {kursi}")  # Unavailable seat (red circle)
+        else:
+            kursi_tampilan.append(f"[\U0001F7E2] {kursi}")  # Available seat (yellow circle)
+
+    kursi_data = [kursi_tampilan[i:i + 5] for i in range(0, len(kursi_tampilan), 5)]
+    headers = [f"Kursi {i+1}" for i in range(5)]
+    print(tabulate(kursi_data, headers=headers, tablefmt="fancy_grid"))
+
+def pilih_kursi(jumlah_tiket , kd_seat, tanggal, tujuan):
     global df_reservations
     kursi_tersedia = list(range(1, kd_seat + 1))
 
@@ -67,18 +80,16 @@ def pilih_kursi(jumlah_tiket, kd_seat, tanggal, tujuan):
             reserved_seats = reserved_seats['Kursi yang Dipilih'].apply(lambda x: list(map(int, x.split(', '))) if x else []).sum()
             kursi_tersedia = [kursi for kursi in kursi_tersedia if kursi not in reserved_seats]
 
+    # Check if there are available seats
+    if len(kursi_tersedia) == 0:
+        print("Semua kursi sudah terisi. Silakan pilih unit shuttle lain.")
+        return None  # Indicate that no seats are available
+
     kursi_dipilih = []
 
-    def tampilkan_kursi():
-        kursi_tampilan = [
-            f"[\U0001F534] {kursi}" if kursi in kursi_dipilih else f"[\U0001F7E2] {kursi}"
-            for kursi in range(1, kd_seat + 1)
-        ]
-        kursi_data = [kursi_tampilan[i:i + 5] for i in range(0, len(kursi_tampilan), 5)]
-        headers = [f"Kursi {i+1}" for i in range(5)]
-        print(tabulate(kursi_data, headers=headers, tablefmt="fancy_grid"))
-
-    tampilkan_kursi()
+    # Call the modified function to display seats
+    tampilkan_kursi(kursi_dipilih, kursi_tersedia, kd_seat)
+    
     for i in range(jumlah_tiket):
         while True:
             try:
@@ -87,7 +98,8 @@ def pilih_kursi(jumlah_tiket, kd_seat, tanggal, tujuan):
                     kursi_dipilih.append(kursi)
                     kursi_tersedia.remove(kursi)
                     print(f"Kursi {kursi} berhasil dipilih.")
-                    tampilkan_kursi()
+                    # Call the modified function to display seats
+                    tampilkan_kursi(kursi_dipilih, kursi_tersedia, kd_seat)
                     break
                 else:
                     print("Kursi tidak tersedia. Silakan pilih kursi lain.")
@@ -232,7 +244,10 @@ def main():
         jumlah_tiket = masukkan_jumlah_tiket(kd_seat)
         tujuan = unit_shuttle[pilihan_unit]["tujuan"]
         kursi_dipilih = pilih_kursi(jumlah_tiket, kd_seat, tanggal_perjalanan, tujuan)
-        
+
+        if kursi_dipilih is None:
+            continue  # Skip to the next iteration if no seats are available
+
         total_harga = unit_shuttle[pilihan_unit]["harga"] * jumlah_tiket
         metode, nomor_tujuan = metode_pembayaran()
         nominal, kembalian = input_pembayaran(total_harga)
